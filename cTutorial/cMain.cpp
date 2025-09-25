@@ -19,10 +19,10 @@ void CloseBuffer();
 #pragma endregion
 
 
-		  #pragma region Define
+#pragma region Define
 #define G 9.80665
 #define Vo 20
-#define FloorCount 5
+#define FloorCount 10
 
 #pragma endregion
 
@@ -204,7 +204,20 @@ void BgInit()
 		floors[i]->shape[2] = "¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á";
 		floors[i]->shape[3] = "¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á";
 	}
-	
+
+
+	floors[6]->x = 20;
+	floors[6]->y = 75;
+
+	floors[7]->x = 50;
+	floors[7]->y = 75;
+
+	floors[8]->x = 80;
+	floors[8]->y = 75;
+
+
+	floors[9]->x = 80;
+	floors[9]->y = 60;
 }
 
 void Init()

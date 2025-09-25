@@ -1,5 +1,28 @@
 #include <stdio.h>
 #include <Windows.h>
+#pragma region DoubleBuffer
+//버퍼 초기화
+#define BufferWidth 400	// 가로 버퍼 크기
+#define BufferHeight 100 // 세로 버퍼 크기
+
+
+HANDLE hBuffer[2];	//창 두게를 제어하는 핸들
+int screenIndex;	//hBuffer[screenIndex], screenIndex == 0 or 1
+
+
+void InitBuffer();
+void FlipBuffer();
+void ClearBuffer();
+void WriteBuffer(int x, int y, const char* shape, int color);
+void CloseBuffer();
+
+#pragma endregion
+
+
+#pragma region Define
+#define G 9.80665
+#define V0 10
+#pragma endregion
 
 #pragma region Enum
 enum Color
@@ -31,16 +54,23 @@ enum Dir
 };
 
 #pragma endregion
-
 #pragma region Struct
+
+struct Collision
+{
+	float time = 0.0;
+	float y = 0;
+	float h = 0;
+	bool jump = false;
+};
 
 struct Obj
 {
-
 	Dir dir;
 	int x;
 	int y;
 	Color color;
+	Collision collision;
 
 	const char* shape[4][13];
 };
@@ -53,23 +83,7 @@ void Init();
 void Update();
 
 
-#pragma region DoubleBuffer
-//버퍼 초기화
-#define BufferWidth 400	// 가로 버퍼 크기
-#define BufferHeight 100 // 세로 버퍼 크기
 
-
-HANDLE hBuffer[2];	//창 두게를 제어하는 핸들
-int screenIndex;	//hBuffer[screenIndex], screenIndex == 0 or 1
-
-
-void InitBuffer();
-void FlipBuffer();
-void ClearBuffer();
-void WriteBuffer(int x, int y, const char* shape, int color);
-void CloseBuffer();
-
-#pragma endregion
 int main()
 {
 	InitBuffer();
@@ -157,6 +171,34 @@ void Init()
 
 void Update()
 {
+
+
+
+	//h = vo * time - 0.5 * g * t * t
+	
+	if (GetAsyncKeyState(VK_RETURN))
+	{
+		player->collision.jump = true;
+		player->collision.time = 0;
+		player->collision.y = player->y;
+	}
+
+
+	if (player->collision.jump)
+	{
+			//Todo
+	}
+
+
+
+
+
+
+
+
+
+
+
 	if (GetAsyncKeyState(VK_LEFT))
 	{
 		player->x--;

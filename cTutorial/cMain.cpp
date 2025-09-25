@@ -22,6 +22,7 @@ void CloseBuffer();
 #pragma region Define
 #define G 9.80665
 #define Vo 20
+#define FloorCount 5
 
 #pragma endregion
 
@@ -80,8 +81,21 @@ struct Obj
 
 #pragma endregion
 
+struct Floor
+{
+	int x;
+	int y;
+	Color color;
+	const char* shape[4];
+
+};
+
 Obj* player = nullptr;
 
+Floor* floors[FloorCount] = {};
+
+void PlayerInit();
+void BgInit();
 void Init();
 void Update();
 
@@ -107,7 +121,7 @@ int main()
 	return 0;
 }
 
-void Init()
+void PlayerInit()
 {
 	player = (Obj*)malloc(sizeof(Obj));
 	player->x = 10;
@@ -177,6 +191,28 @@ void Init()
 	player->shape[3][12] = "¡¡¡á¡á¡¡¡¡¡á¡á¡¡";
 }
 
+void BgInit()
+{
+	for (int i = 0; i < FloorCount; i++)
+	{
+		floors[i] = (Floor*)malloc(sizeof(Floor));
+		floors[i]->x = 30 * i + 10;
+		floors[i]->y = 93;
+		floors[i]->color = WHITE;
+		floors[i]->shape[0] = "¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á";
+		floors[i]->shape[1] = "¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á";
+		floors[i]->shape[2] = "¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á";
+		floors[i]->shape[3] = "¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á";
+	}
+	
+}
+
+void Init()
+{
+	PlayerInit();
+	BgInit();
+}
+
 void Update()
 {
 
@@ -212,15 +248,6 @@ void Update()
 	}
 
 
-
-
-
-
-
-
-
-
-
 	if (GetAsyncKeyState(VK_LEFT))
 	{
 		player->x--;
@@ -238,6 +265,16 @@ void Update()
 		WriteBuffer(player->x, player->y + i, player->shape[player->dir][i], player->color);
 	}
 
+
+	for (int i = 0; i < FloorCount; i++)
+	{
+
+		for (int j = 0; j < 4; j++)
+		{
+			WriteBuffer(floors[i]->x, floors[i]->y + j, floors[i]->shape[j], floors[i]->color);
+		}
+
+	}
 
 
 	

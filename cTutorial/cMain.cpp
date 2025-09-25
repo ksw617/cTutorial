@@ -55,7 +55,7 @@ void Update();
 
 #pragma region DoubleBuffer
 //버퍼 초기화
-#define BufferWidth 200	// 가로 버퍼 크기
+#define BufferWidth 400	// 가로 버퍼 크기
 #define BufferHeight 100 // 세로 버퍼 크기
 
 
@@ -82,7 +82,7 @@ int main()
 		FlipBuffer();
 		ClearBuffer();
 
-		Sleep(50);
+		Sleep(20);
 
 	}
 
@@ -94,7 +94,7 @@ void Init()
 {
 	player = (Obj*)malloc(sizeof(Obj));
 	player->x = 10;
-	player->y = 10;
+	player->y = 80;
 	player->color = WHITE;
 	player->dir = RIGHT;
 
@@ -157,6 +157,18 @@ void Init()
 
 void Update()
 {
+	if (GetAsyncKeyState(VK_LEFT))
+	{
+		player->x--;
+		player->dir = LEFT;
+	}
+
+	if (GetAsyncKeyState(VK_RIGHT))
+	{
+		player->x++;
+		player->dir = RIGHT;
+	}
+
 	for (int i = 0; i < 13; i++)
 	{
 		WriteBuffer(player->x, player->y + i, player->shape[player->dir][i], player->color);

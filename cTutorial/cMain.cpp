@@ -22,13 +22,41 @@ enum Color
 	WHITE,
 };
 
+enum Dir
+{
+	LEFT,
+	RIGHT,
+	UP,
+	DOWN,
+};
+
 #pragma endregion
+
+#pragma region Struct
+
+struct Obj
+{
+
+	Dir dir;
+	int x;
+	int y;
+	Color color;
+
+	const char* shape[4][13];
+};
+
+#pragma endregion
+
+Obj* player = nullptr;
+
+void Init();
+void Update();
 
 
 #pragma region DoubleBuffer
 //버퍼 초기화
-#define BufferWidth 80	// 가로 버퍼 크기
-#define BufferHeight 40 // 세로 버퍼 크기
+#define BufferWidth 200	// 가로 버퍼 크기
+#define BufferHeight 100 // 세로 버퍼 크기
 
 
 HANDLE hBuffer[2];	//창 두게를 제어하는 핸들
@@ -42,16 +70,14 @@ void WriteBuffer(int x, int y, const char* shape, int color);
 void CloseBuffer();
 
 #pragma endregion
-
-
-
 int main()
 {
 	InitBuffer();
+	Init();
 
 	while (true)
 	{
-		WriteBuffer(10, 10, "Hello world", LIGHTMAGENTA);
+		Update();
 
 		FlipBuffer();
 		ClearBuffer();
@@ -64,6 +90,79 @@ int main()
 	return 0;
 }
 
+void Init()
+{
+	player = (Obj*)malloc(sizeof(Obj));
+	player->x = 10;
+	player->y = 10;
+	player->color = WHITE;
+	player->dir = RIGHT;
+
+	player->shape[0][0] = "　　　■■　　　";
+	player->shape[0][1] = "　■■　　■■　";
+	player->shape[0][2] = "■　　　　　　■";
+	player->shape[0][3] = "■　　　　　　■";
+	player->shape[0][4] = "■■　　　　　■";
+	player->shape[0][5] = "■　■■■　　■";
+	player->shape[0][6] = "■　　　　■　■";
+	player->shape[0][7] = "　■　■　　■　";
+	player->shape[0][8] = "■　　　　■■　";
+	player->shape[0][9] = "　■■■■■　　";
+	player->shape[0][10] = "■　　　　■　　";
+	player->shape[0][11] = "■　■■　■　　";
+	player->shape[0][12] = "　■　　■　　　";
+
+	player->shape[1][0] = "　　　■■　　　";
+	player->shape[1][1] = "　■■　　■■　";
+	player->shape[1][2] = "■　　　　　　■";
+	player->shape[1][3] = "■　　　　　　■";
+	player->shape[1][4] = "■　　　　　■■";
+	player->shape[1][5] = "■　　■■■　■";
+	player->shape[1][6] = "■　■　　　　■";
+	player->shape[1][7] = "　■　　■　■　";
+	player->shape[1][8] = "　　■　　　　■";
+	player->shape[1][9] = "　　■■■■■　";
+	player->shape[1][10] = "　　■　　　　■";
+	player->shape[1][11] = "　　■　■■　■";
+	player->shape[1][12] = "　　　■　　■　";
+
+	player->shape[2][0] = "　　　　■■　　";
+	player->shape[2][1] = "　■■■　　■　";
+	player->shape[2][2] = "■　　　　　　■";
+	player->shape[2][3] = "■　　　　　　■";
+	player->shape[2][4] = "■　　　　　　■";
+	player->shape[2][5] = "■　　　　　　■";
+	player->shape[2][6] = "■　　　　　　■";
+	player->shape[2][7] = "■　　　　　　■";
+	player->shape[2][8] = "　■　　　　■　";
+	player->shape[2][9] = "■　■■■■　■";
+	player->shape[2][10] = "■　　　　　　■";
+	player->shape[2][11] = "　■　■■　■　";
+	player->shape[2][12] = "　■■　　■■　";
+
+	player->shape[3][0] = "　　■■　　　　";
+	player->shape[3][1] = "　■　　■■■　";
+	player->shape[3][2] = "■　　　　　　■";
+	player->shape[3][3] = "■　　　　　　■";
+	player->shape[3][4] = "■　　　　■　■";
+	player->shape[3][5] = "■　■■■　■■";
+	player->shape[3][6] = "■■　　　　■■";
+	player->shape[3][7] = "■　■　　■　■";
+	player->shape[3][8] = "　■　　　　■　";
+	player->shape[3][9] = "■■■■■■■■";
+	player->shape[3][10] = "■　　　　　　■";
+	player->shape[3][11] = "　■　■■　■　";
+	player->shape[3][12] = "　■■　　■■　";
+}
+
+void Update()
+{
+	for (int i = 0; i < 13; i++)
+	{
+		WriteBuffer(player->x, player->y + i, player->shape[player->dir][i], player->color);
+	}
+
+}
 
 #pragma region DoubleBuffer
 //버퍼 초기화

@@ -19,7 +19,7 @@ void CloseBuffer();
 #pragma endregion
 
 
-#pragma region Define
+		  #pragma region Define
 #define G 9.80665
 #define Vo 20
 #define FloorCount 5
@@ -239,11 +239,20 @@ void Update()
 
 		player->y = (int)(player->collision.y + player->collision.h);
 
-		if (player->y >= player->collision.y)
+		for (int i = 0; i < FloorCount; i++)
 		{
-			player->y = player->collision.ground;
-			player->collision.jump = false;
+			if (floors[i]->x < player->x + 8 &&
+				player->x < floors[i]->x + 20 && 
+				floors[i]->y < player->y + 13 && 
+				player->y < floors[i]->y + 4)
+			{
+
+				player->y = floors[i]->y - 13;
+				player->collision.jump = false;
+			}
+
 		}
+
 
 	}
 

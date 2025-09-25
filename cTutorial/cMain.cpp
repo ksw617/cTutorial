@@ -21,7 +21,7 @@ void CloseBuffer();
 
 #pragma region Define
 #define G 9.80665
-#define V0 10
+#define Vo 20
 #pragma endregion
 
 #pragma region Enum
@@ -111,6 +111,10 @@ void Init()
 	player->y = 80;
 	player->color = WHITE;
 	player->dir = RIGHT;
+	player->collision.h = 0;
+	player->collision.jump = false;
+	player->collision.time = 0.0f;
+	player->collision.y = 0;
 
 	player->shape[0][0] = "¡¡¡¡¡¡¡á¡á¡¡¡¡¡¡";
 	player->shape[0][1] = "¡¡¡á¡á¡¡¡¡¡á¡á¡¡";
@@ -176,7 +180,7 @@ void Update()
 
 	//h = vo * time - 0.5 * g * t * t
 	
-	if (GetAsyncKeyState(VK_RETURN))
+	if (GetAsyncKeyState(VK_SPACE))
 	{
 		player->collision.jump = true;
 		player->collision.time = 0;
@@ -186,7 +190,19 @@ void Update()
 
 	if (player->collision.jump)
 	{
-			//Todo
+		player->collision.time += 0.1;
+		//h = vo * time - 0.5 * g * t * t
+
+		player->collision.h = -(Vo * player->collision.time) + (0.5 * G * player->collision.time * player->collision.time);
+
+		player->y = (int)(player->collision.y + player->collision.h);
+
+		if (player->y >= player->collision.y)
+		{
+			player->y = player->collision.y;
+			player->collision.jump = false;
+		}
+
 	}
 
 

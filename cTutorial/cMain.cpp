@@ -60,6 +60,7 @@ struct Collision
 {
 	float time = 0.0;
 	float y = 0;
+	int ground = 0;
 	float h = 0;
 	bool jump = false;
 };
@@ -115,6 +116,7 @@ void Init()
 	player->collision.jump = false;
 	player->collision.time = 0.0f;
 	player->collision.y = 0;
+	player->collision.ground = 0;
 
 	player->shape[0][0] = "¡¡¡¡¡¡¡á¡á¡¡¡¡¡¡";
 	player->shape[0][1] = "¡¡¡á¡á¡¡¡¡¡á¡á¡¡";
@@ -180,11 +182,13 @@ void Update()
 
 	//h = vo * time - 0.5 * g * t * t
 	
-	if (GetAsyncKeyState(VK_SPACE))
+	if (GetAsyncKeyState(VK_SPACE) && !player->collision.jump)
 	{
 		player->collision.jump = true;
 		player->collision.time = 0;
 		player->collision.y = player->y;
+		player->collision.ground = player->y;
+		player->collision.h = 0;
 	}
 
 
@@ -199,7 +203,7 @@ void Update()
 
 		if (player->y >= player->collision.y)
 		{
-			player->y = player->collision.y;
+			player->y = player->collision.ground;
 			player->collision.jump = false;
 		}
 

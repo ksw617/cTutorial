@@ -61,10 +61,12 @@ enum Dir
 
 struct Collision
 {
-	float time = 0.0;
-	float y = 0;
-	float h = 0;
+	float time = 0.f;
+	float y = 0.f;
+	float h = 0.f;
+	float vo = 0.f;
 	bool jump = false;
+	
 };
 
 struct Obj
@@ -131,6 +133,7 @@ void PlayerInit()
 	player->collision.y = player->y;
 	player->collision.jump = false;
 	player->collision.time = 0.0f;
+	player->collision.vo = 0.f;
 
 
 	player->shape[0][0] = "　　　＝＝　　　";
@@ -227,6 +230,12 @@ void Init()
 
 void Update()
 {
+	if (GetAsyncKeyState(VK_SPACE) && !player->collision.jump)
+	{
+		player->collision.jump = true;
+		player->collision.vo = Vo;
+	}
+
 	bool isCollision = false;
 
 	for (int i = 0; i < FloorCount; i++)
@@ -238,6 +247,7 @@ void Update()
 		{
 
 			isCollision = true;
+			player->collision.jump = false;
 		}
 	}
 
@@ -250,7 +260,10 @@ void Update()
 	}
 	else
 	{
+
+
 		player->collision.time += 0.1f;
+		float up = (player->collision.vo * player->collision.time);
 		float down = (0.5f * G * player->collision.time * player->collision.time);
 
 		player->collision.h = down;

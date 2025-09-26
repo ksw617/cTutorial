@@ -63,10 +63,8 @@ struct Collision
 {
 	float time = 0.0;
 	float y = 0;
-	int ground = 0;
 	float h = 0;
 	bool jump = false;
-	bool freeFall = false;
 };
 
 struct Obj
@@ -129,12 +127,11 @@ void PlayerInit()
 	player->y = 47;
 	player->color = WHITE;
 	player->dir = RIGHT;
-	player->collision.h = player->y;
-	player->collision.jump = false;
-	player->collision.freeFall = false;
-	player->collision.time = 0.0f;
+	player->collision.h = 0.0f;
 	player->collision.y = player->y;
-	player->collision.ground = player->y;
+	player->collision.jump = false;
+	player->collision.time = 0.0f;
+
 
 	player->shape[0][0] = "¡¡¡¡¡¡¡á¡á¡¡¡¡¡¡";
 	player->shape[0][1] = "¡¡¡á¡á¡¡¡¡¡á¡á¡¡";
@@ -246,16 +243,15 @@ void Update()
 
 	if (isCollision)
 	{
-		player->collision.time = 0;
+		player->collision.time = 0.0f;
 		player->collision.y = player->y;
-		player->collision.ground = player->y;
-		player->collision.h = 0;
+		player->collision.h = 0.f;
 		WriteBuffer(10,10,"¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á", GREEN);
 	}
 	else
 	{
-		player->collision.time += 0.1;
-		float down = (0.5 * G * player->collision.time * player->collision.time);
+		player->collision.time += 0.1f;
+		float down = (0.5f * G * player->collision.time * player->collision.time);
 
 		player->collision.h = down;
 

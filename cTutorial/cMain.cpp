@@ -125,16 +125,16 @@ int main()
 void PlayerInit()
 {
 	player = (Obj*)malloc(sizeof(Obj));
-	player->x = 10;
-	player->y = 80;
+	player->x = 80;
+	player->y = 47;
 	player->color = WHITE;
 	player->dir = RIGHT;
-	player->collision.h = 0;
+	player->collision.h = player->y;
 	player->collision.jump = false;
 	player->collision.freeFall = false;
 	player->collision.time = 0.0f;
-	player->collision.y = 0;
-	player->collision.ground = 0;
+	player->collision.y = player->y;
+	player->collision.ground = player->y;
 
 	player->shape[0][0] = "¡¡¡¡¡¡¡á¡á¡¡¡¡¡¡";
 	player->shape[0][1] = "¡¡¡á¡á¡¡¡¡¡á¡á¡¡";
@@ -230,124 +230,41 @@ void Init()
 
 void Update()
 {
+	bool isCollision = false;
 
-	//h = vo * time - 0.5 * g * t * t
-	
-	if (GetAsyncKeyState(VK_SPACE) && !player->collision.jump)
+	for (int i = 0; i < FloorCount; i++)
 	{
-		player->collision.jump = true;
+		if (floors[i]->x < player->x + 6 &&
+			player->x + 2 < floors[i]->x + 20 &&
+			floors[i]->y < player->y + 15 &&
+			player->y + 12 < floors[i]->y + 4)
+		{
+
+			isCollision = true;
+		}
+	}
+
+	if (isCollision)
+	{
 		player->collision.time = 0;
 		player->collision.y = player->y;
 		player->collision.ground = player->y;
 		player->collision.h = 0;
-	}
-
-
-	if (player->collision.jump)
-	{
-		player->collision.time += 0.1;
-		//h = vo * time - 0.5 * g * t * t
-
-		float up = (Vo * player->collision.time);
-		float down = (0.5 * G * player->collision.time * player->collision.time);
-
-		player->collision.h = -up + down;
-
-		player->y = (int)(player->collision.y + player->collision.h);
-
-		float v = Vo - G * player->collision.time;
-
-
-		if (v < 0)
-		{
-			for (int i = 0; i < FloorCount; i++)
-			{
-				if (floors[i]->x < player->x + 8 &&
-					player->x < floors[i]->x + 20 &&
-					floors[i]->y < player->y + 13 &&
-					player->y + 10 < floors[i]->y + 4)
-				{
-
-					player->y = floors[i]->y - 13;
-					player->collision.jump = false;
-				}
-
-			}
-		}
-
-
+		WriteBuffer(10,10,"¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á", GREEN);
 	}
 	else
 	{
-		bool isCollision = false;
+		player->collision.time += 0.1;
+		float down = (0.5 * G * player->collision.time * player->collision.time);
 
-		for (int i = 0; i < FloorCount; i++)
-		{
-			if (floors[i]->x < player->x + 6 &&
-				player->x + 2 < floors[i]->x + 20 &&
-				floors[i]->y < player->y + 15 &&
-				player->y + 12 < floors[i]->y + 4)
-			{
+		player->collision.h = down;
 
-				isCollision = true;
-
-				player->collision.time = 0;
-				player->collision.y = player->y;
-				player->collision.ground = player->y;
-				player->collision.h = 0;
-			}
-
-		}
-
-
-
-		if (!isCollision)
-		{
-		
-			player->collision.freeFall = true;
-			WriteBuffer(10,10,"DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD", RED);
-		}
-		else
-		{
-			player->collision.freeFall = false;
-			WriteBuffer(10, 10, "QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ", GREEN);
-
-
-		}
-
-		if (player->collision.freeFall)
-		{
-			player->collision.time += 0.1;
-			//h = vo * time - 0.5 * g * t * t
-
-			//float up = (Vo * player->collision.time);
-			float down = (0.5 * G * player->collision.time * player->collision.time);
-
-			//player->collision.h = -up + down;
-			player->collision.h = down;
-
-			player->y = (int)(player->collision.y + player->collision.h);
-
-
-
-			for (int i = 0; i < FloorCount; i++)
-			{
-				if (floors[i]->x < player->x + 8 &&
-					player->x < floors[i]->x + 20 &&
-					floors[i]->y < player->y + 13 &&
-					player->y + 10 < floors[i]->y + 4)
-				{
-
-					player->y = floors[i]->y - 13;
-					player->collision.freeFall = false;
-				}
-
-			}
-
-		}
-	
-
+		player->y = (int)(player->collision.y + player->collision.h);
+		WriteBuffer(10, 10, "¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á", RED);
 	}
+
+
+	
 
 
 	if (GetAsyncKeyState(VK_LEFT))

@@ -61,11 +61,17 @@ enum Dir
 
 struct Collision
 {
+	int left;
+	int top;
+	int right;
+	int bottom;
 	float time = 0.f;
 	float y = 0.f;
 	float h = 0.f;
 	float vo = 0.f;
 	bool jump = false;
+	Color color;
+	const char* boxCollider[4];
 	
 };
 
@@ -134,6 +140,15 @@ void PlayerInit()
 	player->collision.jump = false;
 	player->collision.time = 0.0f;
 	player->collision.vo = 0.f;
+	player->collision.boxCollider[0] = "■■■■■■■■";
+	player->collision.boxCollider[1] = "■■■■■■■■";
+	player->collision.boxCollider[2] = "■■■■■■■■";
+	player->collision.boxCollider[3] = "■■■■■■■■";
+	player->collision.color = RED;
+	player->collision.left = player->x;
+	player->collision.right = player->collision.left + 8; //player->collision.boxCollider[0]의 길이
+	player->collision.top = player->y + 10;
+	player->collision.bottom = player->collision.top + 4; // player->collision.boxCollider 배열 크기
 
 
 	player->shape[0][0] = "　　　■■　　　";
@@ -230,6 +245,11 @@ void Init()
 
 void Update()
 {
+	player->collision.left = player->x + 2;
+	player->collision.right = player->collision.left + 8; //player->collision.boxCollider[0]의 길이
+	player->collision.top = player->y + 10;
+	player->collision.bottom = player->collision.top + 4; // player->collision.boxCollider 배열 크기
+
 	if (GetAsyncKeyState(VK_SPACE) && !player->collision.jump)
 	{
 		player->collision.jump = true;
@@ -240,10 +260,10 @@ void Update()
 
 	for (int i = 0; i < FloorCount; i++)
 	{
-		if (floors[i]->x < player->x + 6 &&
-			player->x + 2 < floors[i]->x + 20 &&
-			floors[i]->y < player->y + 15 &&
-			player->y + 12 < floors[i]->y + 4)
+		if (floors[i]->x < player->collision.right &&
+			player->collision.left < floors[i]->x + 20 &&
+			floors[i]->y < player->collision.bottom &&
+			player->collision.top < floors[i]->y + 4)
 		{
 
 			isCollision = true;
@@ -291,6 +311,12 @@ void Update()
 	for (int i = 0; i < 13; i++)
 	{
 		WriteBuffer(player->x, player->y + i, player->shape[player->dir][i], player->color);
+	}
+
+
+	for (int i = 0; i < 4; i++)
+	{
+		WriteBuffer(player->collision.left, player->collision.top + i, player->collision.boxCollider[i], player->collision.color);
 	}
 
 

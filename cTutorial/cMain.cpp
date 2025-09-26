@@ -66,6 +66,7 @@ struct Collision
 	int ground = 0;
 	float h = 0;
 	bool jump = false;
+	bool freeFall = false;
 };
 
 struct Obj
@@ -130,6 +131,7 @@ void PlayerInit()
 	player->dir = RIGHT;
 	player->collision.h = 0;
 	player->collision.jump = false;
+	player->collision.freeFall = false;
 	player->collision.time = 0.0f;
 	player->collision.y = 0;
 	player->collision.ground = 0;
@@ -229,8 +231,6 @@ void Init()
 void Update()
 {
 
-
-
 	//h = vo * time - 0.5 * g * t * t
 	
 	if (GetAsyncKeyState(VK_SPACE) && !player->collision.jump)
@@ -275,6 +275,77 @@ void Update()
 			}
 		}
 
+
+	}
+	else
+	{
+		bool isCollision = false;
+
+		for (int i = 0; i < FloorCount; i++)
+		{
+			if (floors[i]->x < player->x + 6 &&
+				player->x + 2 < floors[i]->x + 20 &&
+				floors[i]->y < player->y + 15 &&
+				player->y + 12 < floors[i]->y + 4)
+			{
+
+				isCollision = true;
+
+				player->collision.time = 0;
+				player->collision.y = player->y;
+				player->collision.ground = player->y;
+				player->collision.h = 0;
+			}
+
+		}
+
+
+
+		if (!isCollision)
+		{
+		
+			player->collision.freeFall = true;
+			WriteBuffer(10,10,"DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD", RED);
+		}
+		else
+		{
+			player->collision.freeFall = false;
+			WriteBuffer(10, 10, "QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ", GREEN);
+
+
+		}
+
+		if (player->collision.freeFall)
+		{
+			player->collision.time += 0.1;
+			//h = vo * time - 0.5 * g * t * t
+
+			//float up = (Vo * player->collision.time);
+			float down = (0.5 * G * player->collision.time * player->collision.time);
+
+			//player->collision.h = -up + down;
+			player->collision.h = down;
+
+			player->y = (int)(player->collision.y + player->collision.h);
+
+
+
+			for (int i = 0; i < FloorCount; i++)
+			{
+				if (floors[i]->x < player->x + 8 &&
+					player->x < floors[i]->x + 20 &&
+					floors[i]->y < player->y + 13 &&
+					player->y + 10 < floors[i]->y + 4)
+				{
+
+					player->y = floors[i]->y - 13;
+					player->collision.freeFall = false;
+				}
+
+			}
+
+		}
+	
 
 	}
 

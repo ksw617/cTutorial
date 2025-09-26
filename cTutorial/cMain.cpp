@@ -265,7 +265,7 @@ void Update()
 				if (floors[i]->x < player->x + 8 &&
 					player->x < floors[i]->x + 20 &&
 					floors[i]->y < player->y + 13 &&
-					player->y < floors[i]->y + 4)
+					player->y + 10 < floors[i]->y + 4)
 				{
 
 					player->y = floors[i]->y - 13;
@@ -306,6 +306,8 @@ void Update()
 		}
 
 	}
+
+
 
 
 	

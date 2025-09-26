@@ -248,22 +248,31 @@ void Update()
 		player->collision.time += 0.1;
 		//h = vo * time - 0.5 * g * t * t
 
-		player->collision.h = -(Vo * player->collision.time) + (0.5 * G * player->collision.time * player->collision.time);
+		float up = (Vo * player->collision.time);
+		float down = (0.5 * G * player->collision.time * player->collision.time);
+
+		player->collision.h = -up + down;
 
 		player->y = (int)(player->collision.y + player->collision.h);
 
-		for (int i = 0; i < FloorCount; i++)
+		float v = Vo - G * player->collision.time;
+
+
+		if (v < 0)
 		{
-			if (floors[i]->x < player->x + 8 &&
-				player->x < floors[i]->x + 20 && 
-				floors[i]->y < player->y + 13 && 
-				player->y < floors[i]->y + 4)
+			for (int i = 0; i < FloorCount; i++)
 			{
+				if (floors[i]->x < player->x + 8 &&
+					player->x < floors[i]->x + 20 &&
+					floors[i]->y < player->y + 13 &&
+					player->y < floors[i]->y + 4)
+				{
 
-				player->y = floors[i]->y - 13;
-				player->collision.jump = false;
+					player->y = floors[i]->y - 13;
+					player->collision.jump = false;
+				}
+
 			}
-
 		}
 
 

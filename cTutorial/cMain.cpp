@@ -347,7 +347,17 @@ void Update()
 
 		for (int j = 0; j < 4; j++)
 		{
-			WriteBuffer(floors[i]->x, floors[i]->y + j, floors[i]->shape[j], floors[i]->color);
+
+			if (floors[i]->x < 0)
+			{
+				const char* p = floors[i]->shape[j] - floors[i]->x * 2;
+				WriteBuffer(0, floors[i]->y + j, p, floors[i]->color);
+			}
+			else
+			{
+				WriteBuffer(floors[i]->x, floors[i]->y + j, floors[i]->shape[j], floors[i]->color);
+			}
+
 		}
 
 	}

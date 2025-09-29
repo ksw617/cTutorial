@@ -140,10 +140,10 @@ void PlayerInit()
 	player->collision.jump = false;
 	player->collision.time = 0.0f;
 	player->collision.vo = 0.f;
-	player->collision.boxCollider[0] = "■■■■■■■■";
-	player->collision.boxCollider[1] = "■■■■■■■■";
-	player->collision.boxCollider[2] = "■■■■■■■■";
-	player->collision.boxCollider[3] = "■■■■■■■■";
+	player->collision.boxCollider[0] = "■■■■■■";
+	player->collision.boxCollider[1] = "■■■■■■";
+	player->collision.boxCollider[2] = "■■■■■■";
+	player->collision.boxCollider[3] = "■■■■■■";
 	player->collision.color = RED;
 	player->collision.left = player->x;
 	player->collision.right = player->collision.left + 8; //player->collision.boxCollider[0]의 길이
@@ -245,16 +245,31 @@ void Init()
 
 void Update()
 {
-	player->collision.left = player->x + 2;
-	player->collision.right = player->collision.left + 8; //player->collision.boxCollider[0]의 길이
-	player->collision.top = player->y + 10;
-	player->collision.bottom = player->collision.top + 4; // player->collision.boxCollider 배열 크기
+
 
 	if (GetAsyncKeyState(VK_SPACE) && !player->collision.jump)
 	{
 		player->collision.jump = true;
 		player->collision.vo = Vo;
+		player->y--;
 	}
+
+	if (GetAsyncKeyState(VK_LEFT))
+	{
+		player->x--;
+		player->dir = LEFT;
+	}
+
+	if (GetAsyncKeyState(VK_RIGHT))
+	{
+		player->x++;
+		player->dir = RIGHT;
+	}
+
+	player->collision.left = player->x + 1;
+	player->collision.right = player->collision.left + 6; //player->collision.boxCollider[0]의 길이
+	player->collision.top = player->y + 10;
+	player->collision.bottom = player->collision.top + 4; // player->collision.boxCollider 배열 크기
 
 	bool isCollision = false;
 
@@ -266,8 +281,10 @@ void Update()
 			player->collision.top < floors[i]->y + 4)
 		{
 
+			player->collision.vo = 0.0f;
 			isCollision = true;
 			player->collision.jump = false;
+			player->y = floors[i]->y - 13;
 		}
 	}
 
@@ -286,7 +303,7 @@ void Update()
 		float up = (player->collision.vo * player->collision.time);
 		float down = (0.5f * G * player->collision.time * player->collision.time);
 
-		player->collision.h = down;
+		player->collision.h = -up + down;
 
 		player->y = (int)(player->collision.y + player->collision.h);
 		WriteBuffer(10, 10, "■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■", RED);
@@ -296,17 +313,7 @@ void Update()
 	
 
 
-	if (GetAsyncKeyState(VK_LEFT))
-	{
-		player->x--;
-		player->dir = LEFT;
-	}
-
-	if (GetAsyncKeyState(VK_RIGHT))
-	{
-		player->x++;
-		player->dir = RIGHT;
-	}
+	
 
 	for (int i = 0; i < 13; i++)
 	{

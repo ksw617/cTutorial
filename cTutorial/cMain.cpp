@@ -258,12 +258,21 @@ void Update()
 	{
 		player->x--;
 		player->dir = LEFT;
+
+		for (int i = 0; i < FloorCount; i++)
+		{
+			floors[i]->x++;
+		}
 	}
 
 	if (GetAsyncKeyState(VK_RIGHT))
 	{
 		player->x++;
 		player->dir = RIGHT;
+		for (int i = 0; i < FloorCount; i++)
+		{
+			floors[i]->x--;
+		}
 	}
 
 	player->collision.left = player->x + 1;
@@ -307,13 +316,19 @@ void Update()
 
 		player->y = (int)(player->collision.y + player->collision.h);
 		WriteBuffer(10, 10, "¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á¡á", RED);
+
+
+		if (player->y + 13 >= BufferHeight)
+		{
+			player->y = 20;
+			player->collision.time = 0;
+			player->collision.y = player->y;
+			player->collision.h = 0.f;
+			player->collision.vo = 0.0f;
+		}
 	}
 
 
-	
-
-
-	
 
 	for (int i = 0; i < 13; i++)
 	{
@@ -336,11 +351,6 @@ void Update()
 		}
 
 	}
-
-
-
-
-	
 
 }
 

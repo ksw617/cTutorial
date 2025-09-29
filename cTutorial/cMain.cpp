@@ -90,6 +90,7 @@ struct Obj
 
 struct Floor
 {
+	bool act;
 	int x;
 	int y;
 	Color color;
@@ -131,7 +132,7 @@ int main()
 void PlayerInit()
 {
 	player = (Obj*)malloc(sizeof(Obj));
-	player->x = 80;
+	player->x = 50;
 	player->y = 47;
 	player->color = WHITE;
 	player->dir = RIGHT;
@@ -213,28 +214,27 @@ void BgInit()
 	for (int i = 0; i < FloorCount; i++)
 	{
 		floors[i] = (Floor*)malloc(sizeof(Floor));
-		floors[i]->x = 30 * i + 10;
+		floors[i]->x = 40 * i + 10;
 		floors[i]->y = 93;
-		floors[i]->color = WHITE;
+		floors[i]->color = (Color)(i + 1);
 		floors[i]->shape[0] = "■■■■■■■■■■■■■■■■■■■■■■";
 		floors[i]->shape[1] = "■■■■■■■■■■■■■■■■■■■■■■";
 		floors[i]->shape[2] = "■■■■■■■■■■■■■■■■■■■■■■";
 		floors[i]->shape[3] = "■■■■■■■■■■■■■■■■■■■■■■";
+
+		//if (floors[i]->x + strlen(floors[i]->shape[0]) < 0 || floors[i]->x >= BufferWidth / 2)
+		//{
+		//	floors[i]->act = false;
+		//
+		//}
+		//else
+		//{
+		//	floors[i]->act = true;
+		//}
+
+		floors[i]->act = floors[i]->x >= BufferWidth / 2 ? false : true;
 	}
 
-
-	floors[6]->x = 20;
-	floors[6]->y = 75;
-
-	floors[7]->x = 50;
-	floors[7]->y = 75;
-
-	floors[8]->x = 80;
-	floors[8]->y = 75;
-
-
-	floors[9]->x = 80;
-	floors[9]->y = 60;
 }
 
 void Init()
@@ -242,6 +242,7 @@ void Init()
 	PlayerInit();
 	BgInit();
 }
+
 
 void Update()
 {
@@ -344,25 +345,34 @@ void Update()
 
 	for (int i = 0; i < FloorCount; i++)
 	{
+		floors[i]->act = floors[i]->x + 23 < 0 || floors[i]->x + 22 > BufferWidth / 2 ? false : true;
 
-		for (int j = 0; j < 4; j++)
+		if (floors[i]->act)
 		{
-
-			if (floors[i]->x < 0)
+			for (int j = 0; j < 4; j++)
 			{
-				const char* p = floors[i]->shape[j] - floors[i]->x * 2;
-				WriteBuffer(0, floors[i]->y + j, p, floors[i]->color);
-			}
-			else
-			{
-				WriteBuffer(floors[i]->x, floors[i]->y + j, floors[i]->shape[j], floors[i]->color);
-			}
 
+				if (floors[i]->x < 0)
+				{
+					const char* p = floors[i]->shape[j] - floors[i]->x * 2;
+					WriteBuffer(0, floors[i]->y + j, p, floors[i]->color);
+				}
+				
+
+				else
+				{
+					WriteBuffer(floors[i]->x, floors[i]->y + j, floors[i]->shape[j], floors[i]->color);
+				}
+
+			}
 		}
+
+		
 
 	}
 
 }
+
 
 #pragma region DoubleBuffer
 //버퍼 초기화
